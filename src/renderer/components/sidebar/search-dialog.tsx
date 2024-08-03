@@ -21,7 +21,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@renderer/components/ui/command";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export function SearchDialogComponent() {
   const [open, setOpen] = React.useState(false);

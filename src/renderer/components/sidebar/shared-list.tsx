@@ -1,14 +1,12 @@
+import { Button, buttonVariants } from "../ui/button";
 import { MoreHorizontal, User } from "lucide-react";
-import { Button, buttonVariants } from "./ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "../ui/collapsible";
 
-type Props = {};
-
-const PrivateList = (props: Props) => {
+const SharedList = () => {
   return (
     <Collapsible>
       <CollapsibleTrigger
@@ -18,7 +16,7 @@ const PrivateList = (props: Props) => {
           className: "w-full justify-between",
         })}
       >
-        <p className="!mt-0">Private</p>
+        <p className="!mt-0">Shared</p>
         <MoreHorizontal className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="w-full">
@@ -79,4 +77,4 @@ const PrivateList = (props: Props) => {
   );
 };
 
-export default PrivateList;
+export default SharedList;

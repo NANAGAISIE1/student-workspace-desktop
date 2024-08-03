@@ -1,9 +1,7 @@
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Sparkles } from "lucide-react";
 
-type Props = {};
-
-const WorkspaceAi = (props: Props) => {
+const WorkspaceAi = () => {
   return (
     <>
       <Button variant={"ghost"} size={"sm"} className="justify-start">

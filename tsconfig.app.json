@@ -33,6 +33,7 @@
     "src/renderer/env.d.ts",
     "src/renderer/**/*.tsx",
     "src/renderer/**/*.ts",
-    "src/preload/preload.d.ts"
+    "src/preload/preload.d.ts",
+    "amplify/**/*.ts"
   ]
 }

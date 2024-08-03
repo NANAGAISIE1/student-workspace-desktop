@@ -24,6 +24,7 @@ export default defineConfig((env) => {
       alias: {
         "@renderer": resolve("src/renderer/"),
         "@renderer/components/ui": resolve("src/renderer/components/ui/"),
+        "amplify_outputs.json": resolve("./amplify_outputs.json"),
       },
     },
     clearScreen: false,

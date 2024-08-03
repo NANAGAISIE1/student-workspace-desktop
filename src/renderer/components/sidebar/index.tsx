@@ -9,12 +9,12 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { UserProfileMenu } from "./dropdown-menu";
-import { SearchDialogComponent } from "../search-dialog";
-import WorkspaceAi from "../workspace-ai";
+import { SearchDialogComponent } from "./search-dialog";
+import WorkspaceAi from "./workspace-ai";
 import { Separator } from "../ui/separator";
-import FavoritesList from "../favorites-list";
-import SharedList from "../shared-list";
-import PrivateList from "../private-list";
+import FavoritesList from "./favorites-list";
+import SharedList from "./shared-list";
+import PrivateList from "./private-list";
 import { useSidbarStore } from "../use-sidebar";
 
 const Sidebar = () => {

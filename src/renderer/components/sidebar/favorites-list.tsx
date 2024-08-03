@@ -3,12 +3,10 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
-import { Button, buttonVariants } from "./ui/button";
+} from "../ui/collapsible";
+import { Button, buttonVariants } from "../ui/button";
 
-type Props = {};
-
-const FavoritesList = (props: Props) => {
+const FavoritesList = () => {
   return (
     <Collapsible>
       <CollapsibleTrigger

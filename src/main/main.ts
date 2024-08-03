@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
+import * as amplifyHandler from "./amplify";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -32,6 +33,16 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 };
 
+app.on("ready", createWindow);
+
+app.whenReady().then(async () => {
+  createWindow();
+
+  // Test Amplify connection when app is ready
+  const testResult = await amplifyHandler.testAmplifyConnection();
+  console.log("Amplify connection test result:", testResult);
+});
+
 ipcMain.on("minimize-window", () => {
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.minimize();
@@ -53,10 +64,14 @@ ipcMain.on("close-window", () => {
   if (win) win.close();
 });
 
+ipcMain.handle("fetch-todo", () => amplifyHandler.fetchTodos());
+ipcMain.handle("create-todo", (_, content) =>
+  amplifyHandler.createTodo(content),
+);
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
