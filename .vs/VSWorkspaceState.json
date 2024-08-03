@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\renderer"
   ],
+  "SelectedNode": "\\src\\renderer\\main.tsx",
   "PreviewInSolutionExplorer": false
 }

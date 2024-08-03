@@ -1,6 +1,6 @@
 {
-  "name": "student-workspace-desktop",
-  "productName": "student-workspace-desktop",
+  "name": "student-workspace",
+  "productName": "Student Workspace",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "./.vite/build/main.js",
