@@ -30,10 +30,7 @@ const createWindow = () => {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
     mainWindow.loadFile(
-      path.join(
-        import.meta.url,
-        `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`,
-      ),
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
     );
   }
 

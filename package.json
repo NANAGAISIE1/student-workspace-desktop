@@ -3,12 +3,12 @@
   "productName": "student-workspace-desktop",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": "./vite/build/main.js",
+  "main": "./.vite/build/main.js",
   "type": "module",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
+    "package": "electron-forge package DEBUG=electron-windows-installer*",
+    "make": "electron-forge make DEBUG=electron-windows-installer*",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
