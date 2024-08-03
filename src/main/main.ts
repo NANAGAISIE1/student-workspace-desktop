@@ -1,11 +1,17 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import path from "path";
-import * as amplifyHandler from "./amplify";
+import path, { dirname } from "node:path";
+import { createTodo, fetchTodos } from "./amplify/index.js";
+import { fileURLToPath } from "node:url";
+// import { theme } from "./user-preference.js";
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) {
-  app.quit();
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// import ElectronSquirrel from "electron-squirrel-startup";
+
+// // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// if (require("electron-squirrel-startup")) {
+//   app.quit();
+// }
 
 const createWindow = () => {
   // Create the browser window.
@@ -25,23 +31,20 @@ const createWindow = () => {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
     mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
+      path.join(
+        import.meta.url,
+        `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`,
+      ),
     );
   }
+
+  // mainWindow.webContents.send("apply-theme", theme);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
 
 app.on("ready", createWindow);
-
-app.whenReady().then(async () => {
-  createWindow();
-
-  // Test Amplify connection when app is ready
-  const testResult = await amplifyHandler.testAmplifyConnection();
-  console.log("Amplify connection test result:", testResult);
-});
 
 ipcMain.on("minimize-window", () => {
   const win = BrowserWindow.getFocusedWindow();
@@ -64,10 +67,8 @@ ipcMain.on("close-window", () => {
   if (win) win.close();
 });
 
-ipcMain.handle("fetch-todo", () => amplifyHandler.fetchTodos());
-ipcMain.handle("create-todo", (_, content) =>
-  amplifyHandler.createTodo(content),
-);
+ipcMain.handle("fetch-todo", async () => await fetchTodos());
+ipcMain.handle("create-todo", async (_, content) => await createTodo(content));
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

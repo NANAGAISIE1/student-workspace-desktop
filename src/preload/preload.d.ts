@@ -13,7 +13,9 @@ interface ElectronAPI {
       readonly updatedAt: string;
     }[];
   }>;
-  createTodo: (content: string) => Promise<{
+  createTodo: (
+    content: string,
+  ) => Promise<{
     errors: GraphQLFormattedError[];
     data: {
       [x: string]: string[];
@@ -24,6 +26,7 @@ interface ElectronAPI {
       readonly updatedAt: string;
     };
   }>;
+  getTheme: () => "light" | "dark" | "system";
   // Add any other methods you've exposed from your Electron main process
 }
 

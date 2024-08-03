@@ -46,10 +46,6 @@
     --chart-5: 269 56% 62%;
     --radius: 0.5rem;
 
-    --scrollbar-width: 10px;
-    --scrollbar-track: 0 0% 11%;
-    --scrollbar-thumb: 0 0% 100%;
-
     /* New variables for danger, warning, success */
     --danger: 0 72% 51%;
     --danger-foreground: 0 0% 100%;
@@ -123,9 +119,6 @@
     --success: 145 50% 45%;
     --success-foreground: 0 0% 100%;
 
-    --scrollbar-track: 0 0% 100%;
-    --scrollbar-thumb: 0 0% 11%;
-
     /* New variables for background shades */
     --background-light: 0 0% 13%;
     --background-lighter: 0 0% 15%;
@@ -152,32 +145,6 @@
     --pastel-green: 142 49% 58%;
     --pastel-teal: 173 60% 50%;
   }
-}
-
-/* Scrollbar styles */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
-/* Webkit browsers like Chrome, Safari */
-::-webkit-scrollbar {
-  width: var(--scrollbar-width);
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: calc(var(--scrollbar-width) / 2);
-}
-
-/* For Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 @layer base {

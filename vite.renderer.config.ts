@@ -1,9 +1,14 @@
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig } from "vite";
-import { pluginExposeRenderer } from "./vite.base.config";
+import { pluginExposeRenderer } from "./vite.base.config.js";
 import viteReact from "@vitejs/plugin-react";
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 
-import { resolve } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {

@@ -22,7 +22,7 @@ const WindowTitlebar: React.FC = () => {
 
   return (
     <motion.header
-      className="w-full items-center flex justify-between p-3 h-10 flex-1 relative"
+      className="w-full items-center flex justify-between h-10 flex-1 relative"
       initial={false}
       animate={{
         marginLeft: isSidebarOpen ? "15rem" : "0",
@@ -50,7 +50,7 @@ const WindowTitlebar: React.FC = () => {
         )}
         <ModeToggle />
       </div>
-      <div className="flex items-center fixed top-0 right-0 pr-3">
+      <div className="flex items-center fixed top-0 right-0">
         <Button size="icon" variant="ghost" onClick={handleMinimize}>
           <Minus className="w-4 h-4" />
         </Button>

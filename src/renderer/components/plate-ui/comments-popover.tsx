@@ -1,18 +1,20 @@
-"use client";
-import { cn } from "@udecode/cn";
+'use client';
+
+import React from 'react';
+import { cn } from '@udecode/cn';
 import {
   CommentProvider,
   CommentsPositioner,
   SCOPE_ACTIVE_COMMENT,
   useFloatingCommentsContentState,
   useFloatingCommentsState,
-} from "@udecode/plate-comments";
-import { PortalBody } from "@udecode/plate-common";
+} from '@udecode/plate-comments';
+import { PortalBody } from '@udecode/plate-common';
 
-import { CommentCreateForm } from "./comment-create-form";
-import { CommentItem } from "./comment-item";
-import { CommentReplyItems } from "./comment-reply-items";
-import { popoverVariants } from "./popover";
+import { CommentCreateForm } from './comment-create-form';
+import { CommentItem } from './comment-item';
+import { CommentReplyItems } from './comment-reply-items';
+import { popoverVariants } from './popover';
 
 export type FloatingCommentsContentProps = {
   disableForm?: boolean;
@@ -21,19 +23,19 @@ export type FloatingCommentsContentProps = {
 export function CommentsPopoverContent(props: FloatingCommentsContentProps) {
   const { disableForm } = props;
 
-  const { activeCommentId, hasNoComment, myUserId, ref } =
+  const { ref, activeCommentId, hasNoComment, myUserId } =
     useFloatingCommentsContentState();
 
   return (
     <CommentProvider
-      id={activeCommentId}
       key={activeCommentId}
+      id={activeCommentId}
       scope={SCOPE_ACTIVE_COMMENT}
     >
-      <div className={cn(popoverVariants(), "relative w-[310px]")} ref={ref}>
+      <div ref={ref} className={cn(popoverVariants(), 'relative w-[310px]')}>
         {!hasNoComment && (
           <>
-            <CommentItem commentId={activeCommentId} key={activeCommentId} />
+            <CommentItem key={activeCommentId} commentId={activeCommentId} />
 
             <CommentReplyItems />
           </>
@@ -46,7 +48,7 @@ export function CommentsPopoverContent(props: FloatingCommentsContentProps) {
 }
 
 export function CommentsPopover() {
-  const { activeCommentId, loaded } = useFloatingCommentsState();
+  const { loaded, activeCommentId } = useFloatingCommentsState();
 
   if (!loaded || !activeCommentId) return null;
 

@@ -1,7 +1,10 @@
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../../../amplify/data/resource";
+import type { Schema } from "../../../amplify/data/resource.js";
 import outputs from "../../../amplify_outputs.json";
 import { Amplify } from "aws-amplify";
+import Store from "electron-store";
+
+const store = new Store();
 
 try {
   Amplify.configure(outputs);
@@ -12,29 +15,21 @@ try {
 
 const client = generateClient<Schema>();
 
-export async function testAmplifyConnection() {
-  try {
-    // Attempt to list todos as a test
-    const todos = await client.models.Todo.list();
-    console.log("Successfully connected to Amplify. Todos:", todos);
-    return { success: true, message: "Amplify connection successful" };
-  } catch (error) {
-    console.error("Error testing Amplify connection:", error);
-    return {
-      success: false,
-      message: `Amplify connection failed: ${error.message}`,
-    };
-  }
-}
 
 export const fetchTodos = async () => {
-  const { data: todos, errors } = await client.models.Todo.list();
-  return { errors, todos };
+  const {data, errors} = await client.models.Todo.list()
+    store.set("todos", data);
+  store.set("errors", errors);
+  const storedData = { todo: store.get("todos"), error: store.get("errors") };
+  return storedData;
 };
 
+
 export const createTodo = async (content: string) => {
-  const { data, errors } = await client.models.Todo.create({
-    content: [content],
-  });
-  return { errors, data };
-};
+const { data, errors: createTodoError } = await client.models.Todo.create({
+  content: [content],
+});
+store.set("createTodo", data);
+  store.set("createTodoError", createTodoError);
+  console.log("Created todo:", data);
+}

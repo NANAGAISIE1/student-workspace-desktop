@@ -8,8 +8,12 @@ import { Editor as PlateEditor } from "@renderer/components/plate-ui/editor";
 import { FloatingToolbar } from "@renderer/components/plate-ui/floating-toolbar";
 import { FloatingToolbarButtons } from "@renderer/components/plate-ui/floating-toolbar-buttons";
 import { TooltipProvider } from "@renderer/components/plate-ui/tooltip";
-import EditorBanner from "../editor-banner";
+import { CursorOverlay } from "@renderer/components/plate-ui/cursor-overlay";
 import { plugins } from "./plugin";
+import { useRef } from "react";
+import { MENTIONABLES } from "@renderer/lib/plate/mentionables";
+import { MentionCombobox } from "../plate-ui/mention-combobox";
+import { commentsUsers, myUserId } from "@renderer/lib/plate/comments";
 
 const initialValue = [
   {
@@ -20,37 +24,37 @@ const initialValue = [
 ];
 
 export default function Editor() {
+  const containerRef = useRef(null);
   return (
-    <TooltipProvider>
-      <DndProvider backend={HTML5Backend}>
-        <CommentsProvider users={{}} myUserId="1">
-          <Plate plugins={plugins} initialValue={initialValue}>
-            <EditorBanner />
-            <PlateEditor
-              variant={"ghost"}
-              focusRing={false}
-              spellCheck={true}
-              className="bg-background-dark px-16 h-full flex-1 w-full"
-            />
-            {/* <InlineCombobox
-            element={}
-              showTrigger={true}
-              trigger="/"
-            >
+    <>
+      <TooltipProvider>
+        <DndProvider backend={HTML5Backend}>
+          <CommentsProvider users={commentsUsers} myUserId={myUserId}>
+            <Plate plugins={plugins} initialValue={initialValue}>
+              {/* <FixedToolbar className="w-full flex-nowrap absolute inset-0">
+                <FixedToolbarButtons />
+              </FixedToolbar> */}
+              <PlateEditor
+                variant={"ghost"}
+                focusRing={false}
+                spellCheck={true}
+                className="px-16 h-full flex-1 w-full bg-background-dark"
+              />
 
-              <InlineComboboxContent className="my-1.5">
-                
+              <FloatingToolbar>
+                <FloatingToolbarButtons />
+              </FloatingToolbar>
 
-               
-              </InlineComboboxContent>
-            </InlineCombobox> */}
-            <FloatingToolbar>
-              <FloatingToolbarButtons />
-            </FloatingToolbar>
-            <CommentsPopover />
-          </Plate>
-        </CommentsProvider>
-      </DndProvider>
-    </TooltipProvider>
+              <MentionCombobox items={MENTIONABLES} />
+
+              <CommentsPopover />
+
+              <CursorOverlay containerRef={containerRef} />
+              <CommentsPopover />
+            </Plate>
+          </CommentsProvider>
+        </DndProvider>
+      </TooltipProvider>
+    </>
   );
 }

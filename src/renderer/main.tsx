@@ -32,14 +32,15 @@ const router = createHashRouter([
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
+  // const theme = window.electron.getTheme();
   root.render(
     <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="sw-theme">
-        <main className="w-full h-screen relative">
+      <ThemeProvider defaultTheme={"system"} storageKey="sw-theme">
+        <main className="w-full h-screen relative overflow-hidden">
           <div className="top-0 inset-x-0 bg-background-dark fixed">
             <WindowTitlebar />
           </div>
-          <div className="w-full h-full pt-10">
+          <div className="w-full h-full pt-10 overflow-hidden">
             <RouterProvider router={router} />
           </div>
           <Toaster richColors={true} />
