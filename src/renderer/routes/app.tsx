@@ -4,18 +4,17 @@ import { useSidbarStore } from "../components/use-sidebar";
 import Editor from "@renderer/components/editor";
 import EditorBanner from "@renderer/components/editor-banner";
 import { ScrollArea } from "@renderer/components/ui/scroll-area";
-// import { ipcRenderer } from "electron";
 
 export const App = () => {
   const { isSidebarOpen } = useSidbarStore((state) => state);
 
-  const fetchTodos = async () => {
-    const todos = await window.electron.fetchTodos();
-    console.log(todos);
-    return todos;
-  };
+  // const fetchTodos = async () => {
+  //   const todos = await window.electron.fetchTodos();
+  //   console.log(todos);
+  //   return todos;
+  // };
 
-  fetchTodos();
+  // fetchTodos();
 
   return (
     <div className="flex h-full overflow-hidden">

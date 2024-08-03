@@ -3,15 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./globals.css";
 import { App } from "./routes/app";
 import { Toaster } from "./components/ui/sonner";
-import { Amplify } from "aws-amplify";
-import outputs from "../../amplify_outputs.json";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import { LoginPage } from "./routes/login";
 import OnboardingPage from "./routes/onboarding";
 import { ThemeProvider } from "./components/theme-provider";
 import WindowTitlebar from "./components/title-bar";
-
-Amplify.configure(outputs, { ssr: false });
 
 const router = createHashRouter([
   {
