@@ -1,33 +1,63 @@
-// import { generateClient } from "aws-amplify/data";
-// import type { Schema } from "../../../amplify/data/resource.js";
-// import outputs from "../../../amplify_outputs.json";
-// import { Amplify } from "aws-amplify";
-// import Store from "electron-store";
+import {
+  signUp as userSignup,
+  signOut as userSignout,
+  fetchAuthSession,
+} from "aws-amplify/auth";
 
-// const store = new Store();
+import { generateClient } from "aws-amplify/data";
+import { Schema } from "../../../amplify/data/resource.js";
+import { Amplify } from "aws-amplify";
 
-// try {
-//   Amplify.configure(outputs);
-//   console.log("Amplify configured successfully");
-// } catch (error) {
-//   console.error("Error configuring Amplify:", error);
-// }
+const client = generateClient<Schema>();
 
-// const client = generateClient<Schema>();
+export async function signUp(email: string, password: string, name: string) {
+  try {
+    const user = await userSignup({
+      username: email,
+      password: password,
+      options: {
+        userAttributes: {
+          username: name,
+        },
+      },
+    });
+    console.log("User signed up:", user.userId);
+    return { success: true, user };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error.message };
+  }
+}
 
-// export const fetchTodos = async () => {
-//   const {data, errors} = await client.models.Todo.list()
-//     store.set("todos", data);
-//   store.set("errors", errors);
-//   const storedData = { todo: store.get("todos"), error: store.get("errors") };
-//   return storedData;
-// };
+export async function signOut() {
+  try {
+    await userSignout();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
 
-// export const createTodo = async (content: string) => {
-// const { data, errors: createTodoError } = await client.models.Todo.create({
-//   content: [content],
-// });
-// store.set("createTodo", data);
-//   store.set("createTodoError", createTodoError);
-//   console.log("Created todo:", data);
-// }
+export async function getCurrentSession() {
+  try {
+    const session = (await fetchAuthSession()).tokens.accessToken;
+    console.log("This is the session data", session);
+    return session;
+  } catch (error) {
+    console.error("Error getting current session:", error);
+    return null;
+  }
+}
+
+export async function getTodos() {
+  try {
+    console.log("Amplify config:", Amplify.getConfig());
+    const { data, errors } = await client.models.Todo.list();
+    console.log("List todo errors", errors);
+    console.log("List todo data", data);
+    return { data, errors };
+  } catch (error) {
+    console.log("Error listing todos", error);
+    return { error };
+  }
+}

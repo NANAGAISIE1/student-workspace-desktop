@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 import { Input } from "@renderer/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -17,52 +16,78 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginFormSchema } from "./schemas";
 import { z } from "zod";
-import { signIn } from "aws-amplify/auth";
-import { ErrorType } from "./signup-from";
+import { signupFormSchema } from "./schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 
-export function LoginForm() {
+export type ErrorType = {
+  message: string;
+};
+
+export function SignupForm() {
   const navigate = useNavigate();
-  const loginForm = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const signupForm = useForm<z.infer<typeof signupFormSchema>>({
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
     mode: "onBlur",
   });
 
-  async function onSubmitLoginForm(values: z.infer<typeof loginFormSchema>) {
+  async function onSubmitSignupForm(values: z.infer<typeof signupFormSchema>) {
     try {
-      await signIn({
-        username: values.email,
+      const result = await window.electron.signUp({
+        email: values.email,
         password: values.password,
+        name: values.name,
       });
-      navigate("/");
+
+      if (result.success) {
+        // Redirect to the main app or dashboard
+        navigate("/dashboard");
+      } else {
+        signupForm.setError("password", {
+          message: result.error,
+        });
+      }
     } catch (error) {
-      loginForm.setError("password", {
+      signupForm.setError("password", {
         message: (error as ErrorType).message,
       });
     }
   }
   return (
     <Card className="mx-auto max-w-sm">
-      <Form {...loginForm}>
-        <form onSubmit={loginForm.handleSubmit(onSubmitLoginForm)}>
+      <Form {...signupForm}>
+        <form onSubmit={signupForm.handleSubmit(onSubmitSignupForm)}>
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardTitle className="text-xl">Sign Up</CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              Enter your information to create an account
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
               <FormField
-                control={loginForm.control}
+                control={signupForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={signupForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -75,7 +100,7 @@ export function LoginForm() {
                 )}
               />
               <FormField
-                control={loginForm.control}
+                control={signupForm.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -87,36 +112,30 @@ export function LoginForm() {
                   </FormItem>
                 )}
               />
-              <Link
-                to={"/forgot-password"}
-                className="ml-auto inline-block text-sm underline"
-              >
-                Forgot your password?
-              </Link>
             </div>
           </CardContent>
           <CardFooter className="w-full flex flex-col gap-4">
-            <Button variant="outline" className="w-full">
-              Login with Google
-            </Button>
             <Button
               type="submit"
               className="w-full"
-              disabled={loginForm.formState.isLoading}
+              disabled={signupForm.formState.isSubmitting}
             >
-              {loginForm.formState.isLoading ? (
+              {signupForm.formState.isSubmitting ? (
                 <>
                   <Loader2 className="animate-spin" />
-                  <p className="!mt-0">Logging you in</p>
+                  <p className="!mt-0">Creating account</p>
                 </>
               ) : (
-                <p className="!mt-0">Login</p>
+                <p>Create account</p>
               )}
             </Button>
+            <Button variant="outline" className="w-full">
+              Sign up with GitHub
+            </Button>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link to={"/signup"} className="underline">
-                Sign up
+              Already have an account?{" "}
+              <Link to={"/login"} className="underline">
+                Login
               </Link>
             </div>
           </CardFooter>

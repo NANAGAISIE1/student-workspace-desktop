@@ -5,10 +5,11 @@ import {
   LayersIcon,
   LayoutTemplate,
   PanelLeftClose,
+  PenBox,
   Trash2Icon,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { UserProfileMenu } from "./dropdown-menu";
+import { UserProfileMenu } from "./user-profile-dropdown-menu.js";
 import { SearchDialogComponent } from "./search-dialog";
 import WorkspaceAi from "./workspace-ai";
 import { Separator } from "../ui/separator";
@@ -17,6 +18,7 @@ import SharedList from "./shared-list";
 import PrivateList from "./private-list";
 import { useSidbarStore } from "../use-sidebar";
 import { ScrollArea } from "../ui/scroll-area";
+import { useDocuments } from "@renderer/hooks/use-documents.js";
 
 const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidbarStore((state) => state);
@@ -24,6 +26,19 @@ const Sidebar = () => {
   const sidebarVariants = {
     open: { width: "15rem", x: 0 },
     closed: { width: "0", x: "-15rem" },
+  };
+
+  const { createDocument } = useDocuments();
+
+  const handleCreateDocument = async () => {
+    try {
+      createDocument();
+      // Note: The new note will automatically be selected due to our implementation
+      // You might want to add some UI feedback here, e.g., a toast notification
+    } catch (error) {
+      console.error("Failed to create note:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   return (
@@ -49,7 +64,16 @@ const Sidebar = () => {
       </div>
       {/* Rest of the sidebar content */}
       <div className="flex flex-col space-y-2">
-        <UserProfileMenu />
+        <div className="flex justify-between space-x-2">
+          <UserProfileMenu />
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            onClick={handleCreateDocument}
+          >
+            <PenBox className="w-4 h-4" />{" "}
+          </Button>
+        </div>
         <SearchDialogComponent />
         <WorkspaceAi />
         <Button className="justify-start" variant={"ghost"} size={"sm"}>

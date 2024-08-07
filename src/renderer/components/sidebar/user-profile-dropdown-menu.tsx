@@ -41,7 +41,7 @@ export function UserProfileMenu() {
         <Button
           variant="ghost"
           size={"sm"}
-          className="hover:bg-background-lighter justify-between pr-0"
+          className="hover:bg-background-lighter justify-between pr-0 flex-1"
         >
           <div className="flex space-x-2 items-center">
             <User className="h-4 w-4" />

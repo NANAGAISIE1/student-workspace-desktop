@@ -5,8 +5,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import { useDocuments } from "@renderer/hooks/use-documents.js";
 
 const PrivateList = () => {
+  const { documents, isLoading, error, handleDocumentSelect } = useDocuments();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <Collapsible>
       <CollapsibleTrigger
@@ -21,56 +27,19 @@ const PrivateList = () => {
       </CollapsibleTrigger>
       <CollapsibleContent className="w-full">
         <ul className="list-none p-0 m-0 ml-2 w-full">
-          <li className="w-full">
-            <Button
-              className="justify-start w-full"
-              variant={"ghost"}
-              size={"sm"}
-            >
-              <User className="h-4 w-4 mr-2" />
-              <p className="!mt-0">Document</p>
-            </Button>
-          </li>
-          <li className="w-full">
-            <Button
-              className="justify-start w-full"
-              variant={"ghost"}
-              size={"sm"}
-            >
-              <User className="h-4 w-4 mr-2" />
-              <p className="!mt-0">Document</p>
-            </Button>
-          </li>
-          <li className="w-full">
-            <Button
-              className="justify-start w-full"
-              variant={"ghost"}
-              size={"sm"}
-            >
-              <User className="h-4 w-4 mr-2" />
-              <p className="!mt-0">Document</p>
-            </Button>
-          </li>
-          <li className="w-full">
-            <Button
-              className="justify-start w-full"
-              variant={"ghost"}
-              size={"sm"}
-            >
-              <User className="h-4 w-4 mr-2" />
-              <p className="!mt-0">Document</p>
-            </Button>
-          </li>
-          <li className="w-full">
-            <Button
-              className="justify-start w-full"
-              variant={"ghost"}
-              size={"sm"}
-            >
-              <User className="h-4 w-4 mr-2" />
-              <p className="!mt-0">Document</p>
-            </Button>
-          </li>
+          {documents?.map((document, index) => (
+            <li key={document.title} className="w-full">
+              <Button
+                className="justify-start w-full"
+                variant={"ghost"}
+                size={"sm"}
+                onClick={() => handleDocumentSelect(index)}
+              >
+                <User className="h-4 w-4 mr-2" />
+                <p className="!mt-0">{document.title}</p>
+              </Button>
+            </li>
+          ))}
         </ul>
       </CollapsibleContent>
     </Collapsible>

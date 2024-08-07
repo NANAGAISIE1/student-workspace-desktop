@@ -26,7 +26,10 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@renderer/*": ["src/renderer/*"]
+      "@renderer/*": ["src/renderer/*"],
+      "@main/*": ["src/main/*"],
+      "@preload/*": ["src/preload/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
   "include": [
@@ -34,6 +37,7 @@
     "src/renderer/**/*.tsx",
     "src/renderer/**/*.ts",
     "src/preload/preload.d.ts",
+    "src/shared/**/*.ts",
     "amplify/**/*.ts"
   ]
 }

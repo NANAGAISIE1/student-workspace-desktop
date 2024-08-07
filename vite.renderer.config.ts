@@ -25,9 +25,11 @@ export default defineConfig((env) => {
     resolve: {
       preserveSymlinks: true,
       alias: {
+        "@main": resolve("src/main/"),
         "@renderer": resolve("src/renderer/"),
-        "@renderer/components/ui": resolve("src/renderer/components/ui/"),
-        "amplify_outputs.json": resolve("./amplify_outputs.json"),
+        "@shared": resolve("src/shared/"),
+        "@amplify_outputs": resolve("src/amplify_outputs.json"),
+        "@preload": resolve("src/preload/"),
       },
     },
     clearScreen: false,
