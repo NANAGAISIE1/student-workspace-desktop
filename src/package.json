@@ -1,0 +1,35 @@
+{
+  "name": "student-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@auth/core": "^0.34.2",
+    "@convex-dev/auth": "^0.0.54",
+    "@tanstack/react-router": "^1.48.1",
+    "@tauri-apps/api": ">=2.0.0-rc.0",
+    "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
+    "convex": "^1.14.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "resend": "^3.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@tanstack/router-plugin": "^1.47.0",
+    "@tauri-apps/cli": ">=2.0.0-rc.0",
+    "@types/node": "^22.3.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1"
+  },
+  "packageManager": "bun@1.1.12"
+}
