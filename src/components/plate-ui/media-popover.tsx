@@ -1,36 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
+
 import {
   isSelectionExpanded,
   useEditorSelector,
   useElement,
   useRemoveNodeButton,
-} from "@udecode/plate-common";
+} from '@udecode/plate-common';
 import {
-  floatingMediaActions,
   FloatingMedia as FloatingMediaPrimitive,
+  floatingMediaActions,
   useFloatingMediaSelectors,
-} from "@udecode/plate-media";
-import { useReadOnly, useSelected } from "slate-react";
+} from '@udecode/plate-media';
+import { useReadOnly, useSelected } from 'slate-react';
 
-import { Icons } from "@renderer/components/icons";
+import { Icons } from '@/components/icons';
 
-import { Button, buttonVariants } from "./button";
-import { inputVariants } from "./input";
-import { Popover, PopoverAnchor, PopoverContent } from "./popover";
-import { Separator } from "./separator";
+import { Button, buttonVariants } from './button';
+import { CaptionButton } from './caption';
+import { inputVariants } from './input';
+import { Popover, PopoverAnchor, PopoverContent } from './popover';
+import { Separator } from './separator';
 
 export interface MediaPopoverProps {
-  pluginKey?: string;
   children: React.ReactNode;
+  pluginKey?: string;
 }
 
-export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
+export function MediaPopover({ children, pluginKey }: MediaPopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
 
   const selectionCollapsed = useEditorSelector(
     (editor) => !isSelectionExpanded(editor),
-    [],
+    []
   );
   const isOpen = !readOnly && selected && selectionCollapsed;
   const isEditing = useFloatingMediaSelectors().isEditing();
@@ -39,6 +41,7 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
     if (!isOpen && isEditing) {
       floatingMediaActions.isEditing(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const element = useElement();
@@ -47,7 +50,7 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
   if (readOnly) return <>{children}</>;
 
   return (
-    <Popover open={isOpen} modal={false}>
+    <Popover modal={false} open={isOpen}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
       <PopoverContent
@@ -62,25 +65,27 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
               </div>
 
               <FloatingMediaPrimitive.UrlInput
-                className={inputVariants({ variant: "ghost", h: "sm" })}
-                placeholder="Paste the embed link..."
+                className={inputVariants({ h: 'sm', variant: 'ghost' })}
                 options={{
                   pluginKey,
                 }}
+                placeholder="Paste the embed link..."
               />
             </div>
           </div>
         ) : (
           <div className="box-content flex h-9 items-center gap-1">
             <FloatingMediaPrimitive.EditButton
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
+              className={buttonVariants({ size: 'sm', variant: 'ghost' })}
             >
               Edit link
             </FloatingMediaPrimitive.EditButton>
 
-            <Separator orientation="vertical" className="my-1" />
+            <CaptionButton variant="ghost">Caption</CaptionButton>
 
-            <Button variant="ghost" size="sms" {...buttonProps}>
+            <Separator className="my-1" orientation="vertical" />
+
+            <Button size="sms" variant="ghost" {...buttonProps}>
               <Icons.delete className="size-4" />
             </Button>
           </div>

@@ -10,6 +10,14 @@ const schema = defineSchema({
     content: v.optional(v.string()),
     emoji: v.optional(v.string()),
   }),
+  sharedDocuments: defineTable({
+    documentId: v.id("documents"),
+    userId: v.id("users"),
+  }),
+  favoriteDocuments: defineTable({
+    documentId: v.id("documents"),
+    userId: v.id("users"),
+  }),
 });
 
 export default schema;

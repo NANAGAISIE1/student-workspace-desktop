@@ -1,6 +1,7 @@
 import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 
 export function useDocument() {
   const getDocumentById = (id: Id<"documents">) =>

@@ -1,3 +1,4 @@
+import React from "react";
 import { MoreHorizontal, ScrollText } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
@@ -10,18 +11,16 @@ import { useUser } from "@/services/auth-servics";
 import { cn } from "@/lib/utils";
 import { useLocation, useRouter } from "@tanstack/react-router";
 
-const PrivateList = () => {
+const PrivateList: React.FC = () => {
   const router = useRouter();
   const pathname = useLocation().pathname;
-  console.log(pathname);
   const { getDocuments } = useDocument();
   const { user } = useUser();
-  const userId = user?._id;
+  const documents = getDocuments();
 
-  if (!userId) {
+  if (!user?._id) {
     return null;
   }
-  const documents = getDocuments();
 
   return (
     <Collapsible>
@@ -46,8 +45,8 @@ const PrivateList = () => {
                     ? "bg-accent text-accent-foreground"
                     : "",
                 )}
-                variant={"ghost"}
-                size={"sm"}
+                variant="ghost"
+                size="sm"
                 onClick={() =>
                   router.navigate({
                     to: "/index/$",

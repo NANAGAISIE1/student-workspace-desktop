@@ -18,7 +18,7 @@ import {
 } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginFormSchema } from "./schemas";
+import { passAuthFlowSchema } from "./schemas";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -29,23 +29,26 @@ import { useAuthentication } from "@/services/auth-servics";
 export function LoginForm() {
   const { closeSidebar } = useSidebarStore((state) => state);
   const { onSubmitLoginForm } = useAuthentication();
+  const [step, setStep] = useState<"signIn" | "signUp">("signIn");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     closeSidebar();
   }, []);
 
-  const loginForm = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const loginForm = useForm<z.infer<typeof passAuthFlowSchema>>({
+    resolver: zodResolver(passAuthFlowSchema),
     defaultValues: {
       email: "",
+      name: "",
       password: "",
+      flow: "signIn",
     },
     mode: "onBlur",
   });
 
   const loginFormSubmission = async (
-    values: z.infer<typeof loginFormSchema>,
+    values: z.infer<typeof passAuthFlowSchema>,
   ) => {
     await onSubmitLoginForm("password", values);
   };
@@ -55,6 +58,8 @@ export function LoginForm() {
     await onSubmitLoginForm("google");
     setLoading(false);
   };
+
+  const flow = loginForm.getValues().flow;
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -68,6 +73,21 @@ export function LoginForm() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
+              {step === "signUp" && (
+                <FormField
+                  control={loginForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Dan" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={loginForm.control}
                 name="email"
@@ -97,6 +117,18 @@ export function LoginForm() {
               <Link to={"/"} className="ml-auto inline-block text-sm underline">
                 Forgot your password?
               </Link>
+              <FormField
+                control={loginForm.control}
+                name="flow"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input {...field} type="hidden" required />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </CardContent>
           <CardFooter className="w-full flex flex-col gap-4">
@@ -130,10 +162,22 @@ export function LoginForm() {
               )}
             </Button>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link to={"/"} className="underline">
-                Sign up
-              </Link>
+              {step === "signIn"
+                ? "Don't have an account?"
+                : "Already have an account?"}
+              <Button
+                variant={"link"}
+                type="button"
+                onClick={() => {
+                  loginForm.setValue(
+                    "flow",
+                    step === "signIn" ? "signUp" : "signIn",
+                  );
+                  setStep(step === "signIn" ? "signUp" : "signIn");
+                }}
+              >
+                {step === "signIn" ? "Sign up" : "Sign in"}
+              </Button>
             </div>
           </CardFooter>
         </form>

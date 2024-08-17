@@ -1,20 +1,15 @@
 import { Password } from "@convex-dev/auth/providers/Password";
 import { ConvexError } from "convex/values";
-import { z } from "zod";
 import { DataModel } from "../_generated/dataModel";
 import { ResendOTPPasswordReset } from "./reset_password";
 import { ResendOTP } from "./verify_email";
-
-const ParamsSchema = z.object({
-  email: z.string().email(),
-  name: z.string().min(2),
-  password: z.string().min(16),
-});
+import { passAuthFlowSchema } from "../../src/components/auth/schemas";
 
 export default Password<DataModel>({
   profile(params) {
-    const { error, data } = ParamsSchema.safeParse(params);
+    const { error, data } = passAuthFlowSchema.safeParse(params);
     if (error) {
+      console.log("error", error);
       throw new ConvexError(error.format());
     }
     return {

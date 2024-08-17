@@ -11,6 +11,9 @@ export const Route = createRootRoute({
       <Outlet />
       <Toaster
         richColors={true}
+        pauseWhenPageIsHidden={true}
+        toastOptions={{}}
+        position="top-right"
         icons={{
           loading: <Loader2Icon className="animate-spin" />,
         }}

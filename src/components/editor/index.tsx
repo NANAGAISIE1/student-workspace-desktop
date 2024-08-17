@@ -1,4 +1,4 @@
-import { Plate } from "@udecode/plate-common";
+import { Plate, TDescendant } from "@udecode/plate-common";
 import { CommentsProvider } from "@udecode/plate-comments";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -11,20 +11,31 @@ import { TooltipProvider } from "@/components/plate-ui/tooltip";
 import { CursorOverlay } from "@/components/plate-ui/cursor-overlay";
 import { plugins } from "./plugin";
 import { useRef } from "react";
-import { MENTIONABLES } from "@/lib/plate/mentionables";
-import { MentionCombobox } from "../plate-ui/mention-combobox";
+// import { MentionCombobox } from "../plate-ui/mention-combobox";
 import { commentsUsers, myUserId } from "@/lib/plate/comments";
-import { Descendant } from "slate";
+import { Id } from "@convex/dataModel";
+import { useDocument } from "@/services/documents-service";
 
-export default function Editor({
-  initialValue,
-  selectedDocument,
-  handleChange,
-}: {
-  initialValue: any;
-  handleChange: (value: Descendant[]) => void;
-  selectedDocument: any;
-}) {
+export default function Editor({ id }: { id: Id<"documents"> }) {
+  const { getDocumentById, updateDocument } = useDocument();
+  const document = getDocumentById(id);
+
+  const content = document?.content
+    ? JSON.parse(document.content)
+    : [
+        {
+          id: "1",
+          type: "h1",
+          children: [{ text: "Hello, World!" }],
+        },
+      ];
+
+  const saveDocument = async (value: TDescendant[]) => {
+    if (!document) return;
+    await updateDocument({ content: JSON.stringify(value), id });
+    console.log("Document saved:", value);
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -33,10 +44,9 @@ export default function Editor({
         <CommentsProvider users={commentsUsers} myUserId={myUserId}>
           <Plate
             plugins={plugins}
-            initialValue={initialValue}
-            value={initialValue}
-            id={selectedDocument?.title}
-            onChange={handleChange}
+            value={content}
+            id={document?._id}
+            onChange={saveDocument}
           >
             <PlateEditor
               variant={"ghost"}
@@ -50,7 +60,7 @@ export default function Editor({
               <FloatingToolbarButtons />
             </FloatingToolbar>
 
-            <MentionCombobox items={MENTIONABLES} />
+            {/* <MentionCombobox items={MENTIONABLES} /> */}
 
             <CommentsPopover />
 

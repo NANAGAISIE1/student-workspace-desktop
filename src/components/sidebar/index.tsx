@@ -37,7 +37,6 @@ const Sidebar = () => {
 
   const handleCreateDocument = async () => {
     try {
-      const document = await createDocument();
       toast.promise(createDocument, {
         loading: "Creating document...",
         success: "Document created!",
@@ -114,7 +113,7 @@ const Sidebar = () => {
         </Button>
       </div>
       <Separator />
-      <ScrollArea className="h-full justify-start overflow-y-auto flex flex-col w-full px-2">
+      <ScrollArea className="h-full justify-start overflow-hidden flex flex-col w-full px-2 space-y-2 truncate">
         <FavoritesList />
         <SharedList />
         <PrivateList />

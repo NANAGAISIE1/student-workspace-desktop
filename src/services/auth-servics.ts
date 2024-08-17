@@ -1,20 +1,16 @@
 import { z } from "zod";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { loginFormSchema } from "@/components/auth/schemas";
 import { toast } from "sonner";
-import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-
-type ErrorType = {
-  message: string;
-};
+import { passAuthFlowSchema } from "@/components/auth/schemas";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 
 export function useAuthentication() {
   const { signIn, signOut } = useAuthActions();
 
   const onSubmitLoginForm = async (
     provider: "google" | "password",
-    values?: z.infer<typeof loginFormSchema>,
+    values?: z.infer<typeof passAuthFlowSchema>,
   ) => {
     if (values) {
       return await handlePasswordSignIn(values);
@@ -37,16 +33,13 @@ export function useAuthentication() {
   };
 
   const handlePasswordSignIn = async (
-    values: z.infer<typeof loginFormSchema>,
+    values: z.infer<typeof passAuthFlowSchema>,
   ) => {
     try {
-      await signIn("password", {
-        username: values.email,
-        password: values.password,
-      });
+      await signIn("password", values);
     } catch (error) {
-      console.log(error);
-      return error as ErrorType;
+      console.log("sign in error", error);
+      return error;
     }
   };
 
@@ -54,7 +47,6 @@ export function useAuthentication() {
     try {
       await signOut();
     } catch (error) {
-      console.log(error);
       toast.error("Failed to sign out");
     }
   };
@@ -63,7 +55,7 @@ export function useAuthentication() {
 }
 
 export function useUser() {
-  const user = useQuery(api.user.currentUser);
-  console.log(user);
+  let user;
+  user = useQuery(api.user.currentUser);
   return { user };
 }

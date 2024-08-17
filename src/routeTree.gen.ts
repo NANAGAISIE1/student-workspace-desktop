@@ -18,7 +18,6 @@ import { Route as LayoutImport } from './routes/_layout'
 
 // Create Virtual Routes
 
-const RegisterLazyImport = createFileRoute('/register')()
 const OnboardingLazyImport = createFileRoute('/onboarding')()
 const LoginLazyImport = createFileRoute('/login')()
 const LayoutIndexLazyImport = createFileRoute('/_layout/')()
@@ -26,11 +25,6 @@ const LayoutWorkspaceAiLazyImport = createFileRoute('/_layout/workspace-ai')()
 const LayoutIndexSplatLazyImport = createFileRoute('/_layout/index/$')()
 
 // Create/Update Routes
-
-const RegisterLazyRoute = RegisterLazyImport.update({
-  path: '/register',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
 
 const OnboardingLazyRoute = OnboardingLazyImport.update({
   path: '/onboarding',
@@ -103,13 +97,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingLazyImport
       parentRoute: typeof rootRoute
     }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/_layout/workspace-ai': {
       id: '/_layout/workspace-ai'
       path: '/workspace-ai'
@@ -145,7 +132,6 @@ export const routeTree = rootRoute.addChildren({
   SplashscreenRoute,
   LoginLazyRoute,
   OnboardingLazyRoute,
-  RegisterLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -159,8 +145,7 @@ export const routeTree = rootRoute.addChildren({
         "/_layout",
         "/splashscreen",
         "/login",
-        "/onboarding",
-        "/register"
+        "/onboarding"
       ]
     },
     "/_layout": {
@@ -179,9 +164,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/onboarding": {
       "filePath": "onboarding.lazy.tsx"
-    },
-    "/register": {
-      "filePath": "register.lazy.tsx"
     },
     "/_layout/workspace-ai": {
       "filePath": "_layout.workspace-ai.lazy.tsx",

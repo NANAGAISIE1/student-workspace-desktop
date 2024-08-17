@@ -7,6 +7,7 @@ import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "./components/theme-provider";
 import "./globals.css";
 import { store } from "./store/session-store";
+import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 // Create a new router instance
@@ -34,9 +35,11 @@ if (!rootElement.innerHTML) {
         storage={store}
         replaceURL={replaceURL}
       >
-        <ThemeProvider defaultTheme="system" storageKey="st-ui-theme">
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <ConvexQueryCacheProvider>
+          <ThemeProvider defaultTheme="system" storageKey="st-ui-theme">
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </ConvexQueryCacheProvider>
       </ConvexAuthProvider>
     </StrictMode>,
   );
