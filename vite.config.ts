@@ -11,6 +11,7 @@ export default defineConfig(async () => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@convex": path.resolve(__dirname, "./convex/_generated"),
     },
   },
 

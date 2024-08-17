@@ -3,17 +3,17 @@ import { CommentsProvider } from "@udecode/plate-comments";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { CommentsPopover } from "@renderer/components/plate-ui/comments-popover";
-import { Editor as PlateEditor } from "@renderer/components/plate-ui/editor";
-import { FloatingToolbar } from "@renderer/components/plate-ui/floating-toolbar";
-import { FloatingToolbarButtons } from "@renderer/components/plate-ui/floating-toolbar-buttons";
-import { TooltipProvider } from "@renderer/components/plate-ui/tooltip";
-import { CursorOverlay } from "@renderer/components/plate-ui/cursor-overlay";
+import { CommentsPopover } from "@/components/plate-ui/comments-popover";
+import { Editor as PlateEditor } from "@/components/plate-ui/editor";
+import { FloatingToolbar } from "@/components/plate-ui/floating-toolbar";
+import { FloatingToolbarButtons } from "@/components/plate-ui/floating-toolbar-buttons";
+import { TooltipProvider } from "@/components/plate-ui/tooltip";
+import { CursorOverlay } from "@/components/plate-ui/cursor-overlay";
 import { plugins } from "./plugin";
 import { useRef } from "react";
-import { MENTIONABLES } from "@renderer/lib/plate/mentionables";
+import { MENTIONABLES } from "@/lib/plate/mentionables";
 import { MentionCombobox } from "../plate-ui/mention-combobox";
-import { commentsUsers, myUserId } from "@renderer/lib/plate/comments";
+import { commentsUsers, myUserId } from "@/lib/plate/comments";
 import { Descendant } from "slate";
 
 export default function Editor({

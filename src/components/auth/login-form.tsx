@@ -22,8 +22,19 @@ import { loginFormSchema } from "./schemas";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useSidebarStore } from "../sidebar/use-sidebar";
+import { useEffect, useState } from "react";
+import { useAuthentication } from "@/services/auth-servics";
 
 export function LoginForm() {
+  const { closeSidebar } = useSidebarStore((state) => state);
+  const { onSubmitLoginForm } = useAuthentication();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    closeSidebar();
+  }, []);
+
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -33,23 +44,22 @@ export function LoginForm() {
     mode: "onBlur",
   });
 
-  async function onSubmitLoginForm(values: z.infer<typeof loginFormSchema>) {
-    // try {
-    //   await signIn({
-    //     username: values.email,
-    //     password: values.password,
-    //   });
-    //   navigate("/");
-    // } catch (error) {
-    //   loginForm.setError("password", {
-    //     message: (error as ErrorType).message,
-    //   });
-    // }
-  }
+  const loginFormSubmission = async (
+    values: z.infer<typeof loginFormSchema>,
+  ) => {
+    await onSubmitLoginForm("password", values);
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    await onSubmitLoginForm("google");
+    setLoading(false);
+  };
+
   return (
     <Card className="mx-auto max-w-sm">
       <Form {...loginForm}>
-        <form onSubmit={loginForm.handleSubmit(onSubmitLoginForm)}>
+        <form onSubmit={loginForm.handleSubmit(loginFormSubmission)}>
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
@@ -90,8 +100,20 @@ export function LoginForm() {
             </div>
           </CardContent>
           <CardFooter className="w-full flex flex-col gap-4">
-            <Button variant="outline" className="w-full">
-              Login with Google
+            <Button
+              variant="outline"
+              className="w-full"
+              type="button"
+              onClick={handleGoogleSignIn}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  <p className="!mt-0">Logging you in</p>
+                </>
+              ) : (
+                <p className="!mt-0">Login with Google</p>
+              )}
             </Button>
             <Button
               type="submit"

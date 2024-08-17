@@ -5,6 +5,7 @@ type SidebarStore = {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   ensureOpen: () => void;
+  closeSidebar: () => void;
 };
 
 const storage: StateStorage = {
@@ -26,6 +27,7 @@ export const useSidebarStore = create<SidebarStore>()(
       toggleSidebar: () =>
         set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
       ensureOpen: () => set({ isSidebarOpen: true }),
+      closeSidebar: () => set({ isSidebarOpen: false }),
     }),
     {
       name: "sidebar-state", // name of the item in the storage (must be unique)

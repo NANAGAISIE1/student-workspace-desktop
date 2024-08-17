@@ -1,20 +1,24 @@
+import SearchDialog from "@/components/dialogs/search-command-dialog";
+import WorkspaceHeader from "@/components/title-bar";
 import { Toaster } from "@/components/ui/sonner";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { Loader2Icon } from "lucide-react";
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/" className="[&.active]:font-bold">
-          About
-        </Link>
-      </div>
-      <hr />
+    <main className="flex h-screen overflow-hidden w-full flex-col">
+      <WorkspaceHeader />
       <Outlet />
-      <Toaster richColors={true} />
-    </>
+      <Toaster
+        richColors={true}
+        icons={{
+          loading: <Loader2Icon className="animate-spin" />,
+        }}
+      />
+      <SearchDialog />
+      {/* <Link to="/" className="[&.active]:font-bold">
+          About
+        </Link> */}
+    </main>
   ),
 });

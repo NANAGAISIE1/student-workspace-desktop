@@ -13,35 +13,140 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SplashscreenImport } from './routes/splashscreen'
+import { Route as LayoutImport } from './routes/_layout'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
+const RegisterLazyImport = createFileRoute('/register')()
+const OnboardingLazyImport = createFileRoute('/onboarding')()
+const LoginLazyImport = createFileRoute('/login')()
+const LayoutIndexLazyImport = createFileRoute('/_layout/')()
+const LayoutWorkspaceAiLazyImport = createFileRoute('/_layout/workspace-ai')()
+const LayoutIndexSplatLazyImport = createFileRoute('/_layout/index/$')()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
-  path: '/',
+const RegisterLazyRoute = RegisterLazyImport.update({
+  path: '/register',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
+
+const OnboardingLazyRoute = OnboardingLazyImport.update({
+  path: '/onboarding',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/onboarding.lazy').then((d) => d.Route))
+
+const LoginLazyRoute = LoginLazyImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
+const SplashscreenRoute = SplashscreenImport.update({
+  path: '/splashscreen',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutIndexLazyRoute = LayoutIndexLazyImport.update({
+  path: '/',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout.index.lazy').then((d) => d.Route))
+
+const LayoutWorkspaceAiLazyRoute = LayoutWorkspaceAiLazyImport.update({
+  path: '/workspace-ai',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout.workspace-ai.lazy').then((d) => d.Route),
+)
+
+const LayoutIndexSplatLazyRoute = LayoutIndexSplatLazyImport.update({
+  path: '/index/$',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout.index.$.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/splashscreen': {
+      id: '/splashscreen'
+      path: '/splashscreen'
+      fullPath: '/splashscreen'
+      preLoaderRoute: typeof SplashscreenImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/_layout/workspace-ai': {
+      id: '/_layout/workspace-ai'
+      path: '/workspace-ai'
+      fullPath: '/workspace-ai'
+      preLoaderRoute: typeof LayoutWorkspaceAiLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutIndexLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/index/$': {
+      id: '/_layout/index/$'
+      path: '/index/$'
+      fullPath: '/index/$'
+      preLoaderRoute: typeof LayoutIndexSplatLazyImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexLazyRoute })
+export const routeTree = rootRoute.addChildren({
+  LayoutRoute: LayoutRoute.addChildren({
+    LayoutWorkspaceAiLazyRoute,
+    LayoutIndexLazyRoute,
+    LayoutIndexSplatLazyRoute,
+  }),
+  SplashscreenRoute,
+  LoginLazyRoute,
+  OnboardingLazyRoute,
+  RegisterLazyRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -51,11 +156,44 @@ export const routeTree = rootRoute.addChildren({ IndexLazyRoute })
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/_layout",
+        "/splashscreen",
+        "/login",
+        "/onboarding",
+        "/register"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
+    "/_layout": {
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/workspace-ai",
+        "/_layout/",
+        "/_layout/index/$"
+      ]
+    },
+    "/splashscreen": {
+      "filePath": "splashscreen.tsx"
+    },
+    "/login": {
+      "filePath": "login.lazy.tsx"
+    },
+    "/onboarding": {
+      "filePath": "onboarding.lazy.tsx"
+    },
+    "/register": {
+      "filePath": "register.lazy.tsx"
+    },
+    "/_layout/workspace-ai": {
+      "filePath": "_layout.workspace-ai.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/": {
+      "filePath": "_layout.index.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/index/$": {
+      "filePath": "_layout.index.$.lazy.tsx",
+      "parent": "/_layout"
     }
   }
 }

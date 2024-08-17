@@ -10,7 +10,6 @@ import {
 } from "../ui/command.js";
 import { ScrollArea } from "../ui/scroll-area.js";
 import { CreditCard, Settings, User } from "lucide-react";
-import { useDocuments } from "@/hooks/use-documents";
 import { useSearchStore } from "./use-search-dialog.js";
 import { useEffect } from "react";
 
@@ -30,11 +29,11 @@ export default function SearchDialog() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const { documents, handleDocumentSelect } = useDocuments();
-  const handleSelect = (index: number) => {
-    handleDocumentSelect(index);
-    toggleSearchDialog();
-  };
+  // const { documents, handleDocumentSelect } = useDocuments();
+  // const handleSelect = (index: number) => {
+  //   handleDocumentSelect(index);
+  //   toggleSearchDialog();
+  // };
 
   return (
     <CommandDialog open={isSearchDialogOpen} onOpenChange={toggleSearchDialog}>

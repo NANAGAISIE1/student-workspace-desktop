@@ -1,24 +1,27 @@
-import { MoreHorizontal, User } from "lucide-react";
+import { MoreHorizontal, ScrollText } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { useDocuments } from "@renderer/hooks/use-documents.js";
-import { cn } from "@renderer/lib/utils";
+import { useDocument } from "@/services/documents-service";
+import { useUser } from "@/services/auth-servics";
+import { cn } from "@/lib/utils";
+import { useLocation, useRouter } from "@tanstack/react-router";
 
 const PrivateList = () => {
-  const {
-    documents,
-    isLoading,
-    error,
-    handleDocumentSelect,
-    selectedDocumentIndex,
-  } = useDocuments();
+  const router = useRouter();
+  const pathname = useLocation().pathname;
+  console.log(pathname);
+  const { getDocuments } = useDocument();
+  const { user } = useUser();
+  const userId = user?._id;
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (!userId) {
+    return null;
+  }
+  const documents = getDocuments();
 
   return (
     <Collapsible>
@@ -32,22 +35,31 @@ const PrivateList = () => {
         <p className="!mt-0">Private</p>
         <MoreHorizontal className="h-4 w-4" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="w-full pr-2">
-        <ul className="list-none p-0 m-0 ml-2 w-full">
-          {documents?.map((document, index) => (
-            <li key={document.title} className="w-full">
+      <CollapsibleContent className="w-full pr-2 pt-2">
+        <ul className="list-none p-0 m-0 ml-2 w-full space-y-2">
+          {documents?.map((document) => (
+            <li key={document._id} className="w-full">
               <Button
                 className={cn(
-                  "w-full justify-start",
-                  selectedDocumentIndex === index
+                  "w-full justify-start ",
+                  pathname === `/index/${document._id}`
                     ? "bg-accent text-accent-foreground"
                     : "",
                 )}
                 variant={"ghost"}
                 size={"sm"}
-                onClick={() => handleDocumentSelect(index)}
+                onClick={() =>
+                  router.navigate({
+                    to: "/index/$",
+                    params: { _splat: document._id },
+                  })
+                }
               >
-                <User className="h-4 w-4 mr-2" />
+                {document.emoji ? (
+                  <span>{document.emoji}</span>
+                ) : (
+                  <ScrollText className="h-4 w-4 mr-2" />
+                )}
                 <p className="!mt-0">{document.title}</p>
               </Button>
             </li>

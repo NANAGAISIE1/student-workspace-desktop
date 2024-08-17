@@ -12,12 +12,23 @@
     "windows": [
       {
         "title": "student-workspace",
-        "width": 800,
-        "height": 600
+        "width": 1500,
+        "height": 1000,
+        "decorations": false,
+        "resizable": true,
+        "dragDropEnabled": true
       }
     ],
     "security": {
       "csp": null
+    }
+  },
+  "plugins": {
+    "deep-link": {
+      "mobile": [{ "host": "localhost" }],
+      "desktop": {
+        "schemes": ["student-hub"]
+      }
     }
   },
   "bundle": {

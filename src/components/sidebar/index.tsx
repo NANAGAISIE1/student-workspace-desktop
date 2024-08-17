@@ -11,17 +11,22 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { UserProfileMenu } from "./user-profile-dropdown-menu.js";
-import WorkspaceAi from "./workspace-ai";
+import WorkspaceAi from "./workspace-ai.index.js";
 import { Separator } from "../ui/separator";
 import FavoritesList from "./favorites-list";
 import SharedList from "./shared-list";
 import PrivateList from "./private-list";
 import { ScrollArea } from "../ui/scroll-area";
-import { useDocuments } from "@renderer/hooks/use-documents.js";
 import { useSidebarStore } from "./use-sidebar";
 import { useSearchStore } from "../dialogs/use-search-dialog";
+import { useRouter } from "@tanstack/react-router";
+import { useDocument } from "@/services/documents-service.js";
+import { toast } from "sonner";
 
 const Sidebar = () => {
+  let toastId: string;
+  const router = useRouter();
+  const { createDocument } = useDocument();
   const { isSidebarOpen, toggleSidebar } = useSidebarStore((state) => state);
   const { toggleSearchDialog } = useSearchStore((state) => state);
 
@@ -30,16 +35,18 @@ const Sidebar = () => {
     closed: { width: "0", x: "-15rem" },
   };
 
-  const { createDocument } = useDocuments();
-
   const handleCreateDocument = async () => {
     try {
-      createDocument();
-      // Note: The new note will automatically be selected due to our implementation
-      // You might want to add some UI feedback here, e.g., a toast notification
+      const document = await createDocument();
+      toast.promise(createDocument, {
+        loading: "Creating document...",
+        success: "Document created!",
+        id: toastId,
+      });
+      console.log("Document created:", document);
     } catch (error) {
       console.error("Failed to create note:", error);
-      // Handle error (e.g., show an error message to the user)
+      toast.error("Failed to create document", { id: toastId });
     }
   };
 
@@ -54,7 +61,7 @@ const Sidebar = () => {
         stiffness: 400,
         damping: 40,
       }}
-      className="fixed top-0 left-0 h-screen border-r bg-background flex flex-col space-y-2 overflow-hidden"
+      className="fixed top-0 left-0 h-screen border-r bg-background flex flex-col space-y-2 overflow-hidden pb-2"
     >
       <div className="flex justify-between px-2">
         <Button size={"icon"} variant={"ghost"}>
@@ -65,7 +72,7 @@ const Sidebar = () => {
         </Button>
       </div>
       <div className="flex flex-col space-y-2 px-2">
-        <div className="flex justify-between space-x-2">
+        <div className="flex justify-between space-x-2 items-center">
           <UserProfileMenu />
           <Button
             size={"icon"}
@@ -85,11 +92,23 @@ const Sidebar = () => {
           <p className="!mt-0">Search...</p>
         </Button>
         <WorkspaceAi />
-        <Button className="justify-start" variant={"ghost"} size={"sm"}>
+        <Button
+          className="justify-start"
+          variant={"ghost"}
+          size={"sm"}
+          onClick={() => router.navigate({ to: "/" })}
+        >
           <Home className="h-4 w-4 mr-2" />
           <p className="!mt-0">Home</p>
         </Button>
-        <Button className="justify-start" variant={"ghost"} size={"sm"}>
+        <Button
+          className="justify-start"
+          variant={"ghost"}
+          size={"sm"}
+          onClick={() =>
+            router.navigate({ to: "/index/$", params: { _splat: "hello" } })
+          }
+        >
           <Inbox className="h-4 w-4 mr-2" />
           <p className="!mt-0">Inbox</p>
         </Button>

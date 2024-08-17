@@ -6,7 +6,7 @@ type SearchStore = {
 };
 
 export const useSearchStore = create<SearchStore>()((set) => ({
-  isSearchDialogOpen: true,
+  isSearchDialogOpen: false,
   toggleSearchDialog: () =>
     set((state) => ({ isSearchDialogOpen: !state.isSearchDialogOpen })),
 }));

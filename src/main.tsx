@@ -5,6 +5,8 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "./components/theme-provider";
+import "./globals.css";
+import { store } from "./store/session-store";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 // Create a new router instance
@@ -17,13 +19,21 @@ declare module "@tanstack/react-router" {
   }
 }
 
+const replaceURL = (relativeUrl: string) => {
+  router.history.replace(relativeUrl);
+};
+
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <ConvexAuthProvider client={convex}>
+      <ConvexAuthProvider
+        client={convex}
+        storage={store}
+        replaceURL={replaceURL}
+      >
         <ThemeProvider defaultTheme="system" storageKey="st-ui-theme">
           <RouterProvider router={router} />
         </ThemeProvider>
