@@ -1,6 +1,3 @@
-use crate::models::Document;
-use crate::services::{ConvexSyncService, DatabaseService};
-use tauri::State;
 
 // #[tauri::command]
 // pub async fn create_document(

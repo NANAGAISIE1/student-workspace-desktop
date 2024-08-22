@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::models::{Document, User};
+use crate::models::User;
 use surrealdb::engine::local::{Db, RocksDb};
 use surrealdb::opt::auth::Scope;
 use surrealdb::{Result, Surreal};

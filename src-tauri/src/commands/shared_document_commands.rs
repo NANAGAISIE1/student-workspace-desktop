@@ -1,6 +1,3 @@
-use crate::models::SharedDocument;
-use crate::services::{ConvexSyncService, DatabaseService};
-use tauri::State;
 
 // #[tauri::command]
 // pub async fn share_document(
