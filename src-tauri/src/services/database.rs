@@ -1,49 +1,58 @@
-use crate::models::{Document, SharedDocument, FavoriteDocument, User};
-use surrealdb::Datastore;
-use surrealdb::sql::Value;
-use anyhow::Result;
+use std::collections::HashMap;
+
+use crate::models::{Document, User};
+use surrealdb::engine::local::{Db, RocksDb};
+use surrealdb::opt::auth::Scope;
+use surrealdb::{Result, Surreal};
 
 pub struct DatabaseService {
-    ds: Datastore,
+    db: Surreal<Db>,
+}
+
+// Helper function to convert User struct into appropriate params for SurrealDB
+fn user_params(user: User) -> HashMap<String, String> {
+    let mut params = HashMap::new();
+    params.insert("email".to_string(), user.email);
+    params.insert("pass".to_string(), user.pass);
+    params.insert("name".to_string(), user.name);
+    // Add more fields if necessary
+    params
 }
 
 impl DatabaseService {
     pub async fn new() -> Result<Self> {
-        let ds = Datastore::new("file://data.db").await?;
-        Ok(Self { ds })
+        let db = Surreal::new::<RocksDb>("student_workspace_db").await?;
+        db.use_ns("student_workspace")
+            .use_db("student_workspace")
+            .await?;
+        Ok(Self { db })
     }
 
-    pub async fn create_document(&self, document: &Document) -> Result<String> {
-        let sql = "CREATE document CONTENT $data RETURN id";
-        let vars = surrealdb::sql::Object::from(document);
-        let res = self.ds.execute(sql, &vars, false).await?;
-        let id = res[0].result?.first().as_string()?;
-        Ok(id)
+    pub async fn sign_up(&self, user: User) -> Result<String> {
+        let jwt = self
+            .db
+            .signup(Scope {
+                namespace: "student_workspace",
+                database: "student_workspace",
+                scope: "user_scope",
+                params: &user_params(user.clone()), // Convert user struct to appropriate params
+            })
+            .await?;
+
+        Ok(jwt.as_insecure_token().to_string())
     }
 
-    pub async fn get_document(&self, id: &str) -> Result<Option<Document>> {
-        let sql = "SELECT * FROM document WHERE id = $id";
-        let vars = surrealdb::sql::Object::from([("id", id)]);
-        let res = self.ds.execute(sql, &vars, false).await?;
-        let doc = res[0].result?.first().as_object()?;
-        Ok(doc.map(|d| serde_json::from_value(d.clone()).unwrap()))
-    }
+    pub async fn sign_in(&self, user: User) -> Result<String> {
+        let jwt = self
+            .db
+            .signin(Scope {
+                namespace: "student_workspace",
+                database: "student_workspace",
+                scope: "user_scope",
+                params: &user_params(user), // Convert user struct to appropriate params
+            })
+            .await?;
 
-    pub async fn update_document(&self, document: &Document) -> Result<()> {
-        let sql = "UPDATE document SET * = $data WHERE id = $id";
-        let mut vars = surrealdb::sql::Object::from(document);
-        vars.insert("id".into(), document.id.clone().into());
-        self.ds.execute(sql, &vars, false).await?;
-        Ok(())
+        Ok(jwt.as_insecure_token().to_string())
     }
-
-    pub async fn delete_document(&self, id: &str) -> Result<()> {
-        let sql = "DELETE FROM document WHERE id = $id";
-        let vars = surrealdb::sql::Object::from([("id", id)]);
-        self.ds.execute(sql, &vars, false).await?;
-        Ok(())
-    }
-
-    // Implement similar methods for SharedDocument, FavoriteDocument, and User
-    // ...
 }

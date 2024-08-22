@@ -1,6 +1,15 @@
 use crate::models::User;
-use crate::services::{DatabaseService, ConvexSyncService};
+use crate::services::{ConvexSyncService, DatabaseService};
 use tauri::State;
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+pub enum CreateUserError {
+    #[error("Error signing up user: {0}")]
+    SignUpError(String),
+    #[error("Error syncing user with Convex: {0}")]
+    SyncError(String),
+}
 
 #[tauri::command]
 pub async fn create_user(
@@ -8,36 +17,24 @@ pub async fn create_user(
     convex: State<'_, ConvexSyncService>,
     user: User,
 ) -> Result<String, String> {
-    let id = db.create_user(&user).await.map_err(|e| e.to_string())?;
+    let token = db.sign_up(user.clone()).await.map_err(|e| e.to_string());
 
     if user.is_premium {
-        convex.sync_user(&user).await.map_err(|e| e.to_string())?;
+        let sync = convex.sync_user(user).await.map_err(|e| e.to_string());
+
+        match sync {
+            Ok(_) => {}
+            Err(e) => return Err(e),
+        }
     }
 
-    Ok(id)
+    match token {
+        Ok(token) => Ok(token),
+        Err(e) => Err(e),
+    }
 }
 
 #[tauri::command]
-pub async fn get_user(
-    db: State<'_, DatabaseService>,
-    id: String,
-) -> Result<Option<User>, String> {
-    db.get_user(&id).await.map_err(|e| e.to_string())
+pub async fn sign_in(db: State<'_, DatabaseService>, user: User) -> Result<String, String> {
+    db.sign_in(user).await.map_err(|e| e.to_string())
 }
-
-#[tauri::command]
-pub async fn update_user(
-    db: State<'_, DatabaseService>,
-    convex: State<'_, ConvexSyncService>,
-    user: User,
-) -> Result<(), String> {
-    db.update_user(&user).await.map_err(|e| e.to_string())?;
-
-    if user.is_premium {
-        convex.sync_user(&user).await.map_err(|e| e.to_string())?;
-    }
-
-    Ok(())
-}
-
-// Add more user related commands as needed
