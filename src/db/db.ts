@@ -31,7 +31,7 @@ class DB {
           this.instance.execute(SCHEMAS.pages),
           this.instance.execute(SCHEMAS.favorite_pages),
         ]);
-        console.log("Database initialized and schemas created");
+        console.info("Database initialized and schemas created");
       }
     } catch (error) {
       console.error("Failed to initialize database:", error);

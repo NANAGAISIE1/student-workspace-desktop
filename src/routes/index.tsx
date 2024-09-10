@@ -18,6 +18,7 @@ export const Route = createFileRoute("/")({
   ),
   beforeLoad: async () => {
     const isAuthenticated = await DB.auth.isAuthenticated();
+    console.log("isAuthenticated", isAuthenticated);
     try {
       if (!isAuthenticated) {
         const users = await DB.users.list();

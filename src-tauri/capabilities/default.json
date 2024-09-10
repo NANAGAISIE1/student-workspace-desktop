@@ -10,6 +10,12 @@
     "sql:allow-execute",
     "sql:allow-select",
     "window-state:default",
-    "sql:default"
+    "sql:default",
+    "fs:default",
+    "fs:allow-remove",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$APPLOCALDATA/*" }]
+    }
   ]
 }
