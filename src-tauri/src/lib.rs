@@ -1,33 +1,37 @@
-pub mod commands;
-pub mod models;
-pub mod services;
+use tauri::{ AppHandle, Manager };
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-use services::{ConvexSyncService, DatabaseService};
-
-use crate::commands::{create_user, sign_in};
+#[tauri::command]
+fn greet(name: &str) -> String {
+    format!("Hello, {}! You've been greeted from Rust!", name)
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    // Initialize async resources before running the Tauri app
-    tauri::async_runtime::block_on(async {
-        let db_service = DatabaseService::new()
-            .await
-            .expect("Failed to initialize database");
+    tauri::Builder
+        ::default()
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_sql::Builder::default().build())
+        .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(
+            tauri_plugin_single_instance::init(|app, _args, _cwd| {
+                let _ = show_window(app);
+            })
+        )
+        .invoke_handler(tauri::generate_handler![greet])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
 
-        tauri::Builder::default()
-            .manage(db_service)
-            .manage(ConvexSyncService::new())
-            .plugin(tauri_plugin_deep_link::init())
-            .plugin(tauri_plugin_http::init())
-            .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
-                println!("{}, {argv:?}, {cwd}", app.package_info().name)
-            }))
-            .plugin(tauri_plugin_store::Builder::new().build())
-            .plugin(tauri_plugin_window_state::Builder::new().build())
-            .plugin(tauri_plugin_shell::init())
-            .plugin(tauri_plugin_persisted_scope::init())
-            .invoke_handler(tauri::generate_handler![create_user, sign_in])
-            .run(tauri::generate_context!())
-            .expect("error while running tauri application");
-    });
+fn show_window(app: &AppHandle) {
+    let windows = app.webview_windows();
+
+    windows
+        .values()
+        .next()
+        .expect("Sorry, no window found")
+        .set_focus()
+        .expect("Can't Bring Window to Focus");
 }

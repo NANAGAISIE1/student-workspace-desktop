@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+import { Store } from "@tauri-apps/plugin-store";
 type Theme = "dark" | "light" | "system";
 
 type ThemeProviderProps = {
@@ -20,15 +20,26 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+const store = new Store("theme-store.bin");
+
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = "student-workspace-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-  );
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+
+  useEffect(() => {
+    const fetchTheme = async () => {
+      const storedTheme = (await store.get(storageKey)) as Theme;
+      if (storedTheme) {
+        setTheme(storedTheme);
+      }
+    };
+
+    fetchTheme();
+  }, [storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -50,8 +61,8 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
+    setTheme: async (theme: Theme) => {
+      await store.set(storageKey, theme);
       setTheme(theme);
     },
   };

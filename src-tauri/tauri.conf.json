@@ -1,7 +1,7 @@
 {
-  "productName": "student-workspace",
+  "productName": "student-workspace-desktop",
   "version": "0.1.0",
-  "identifier": "com.student-workspace.app",
+  "identifier": "com.student-workspace-desktop.app",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -11,12 +11,9 @@
   "app": {
     "windows": [
       {
-        "title": "student-workspace",
-        "width": 1500,
-        "height": 1000,
-        "decorations": false,
-        "resizable": true,
-        "dragDropEnabled": true
+        "title": "Student Workspace",
+        "width": 1300,
+        "height": 900
       }
     ],
     "security": {
@@ -25,9 +22,14 @@
   },
   "plugins": {
     "deep-link": {
-      "mobile": [{ "host": "localhost" }],
+      "mobile": [
+        {
+          "host": "student-workspace-pearl.vercel.app",
+          "pathPrefix": ["/app"]
+        }
+      ],
       "desktop": {
-        "schemes": ["student-hub"]
+        "schemes": ["student-workspace", "student-workspace-desktop"]
       }
     }
   },

@@ -1,27 +1,17 @@
-import SearchDialog from "@/components/dialogs/search-command-dialog";
-import WorkspaceHeader from "@/components/title-bar";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/shadcn-ui/sonner";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 
 export const Route = createRootRoute({
   component: () => (
-    <main className="flex h-screen overflow-hidden w-full flex-col">
-      <WorkspaceHeader />
+    <div className="h-screen antialiased">
       <Outlet />
       <Toaster
-        richColors={true}
-        pauseWhenPageIsHidden={true}
-        toastOptions={{}}
-        position="top-right"
+        richColors
         icons={{
           loading: <Loader2Icon className="animate-spin" />,
         }}
       />
-      <SearchDialog />
-      {/* <Link to="/" className="[&.active]:font-bold">
-          About
-        </Link> */}
-    </main>
+    </div>
   ),
 });

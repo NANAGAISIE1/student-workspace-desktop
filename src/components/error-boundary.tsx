@@ -1,6 +1,6 @@
 import React, { ErrorInfo, ReactNode } from "react";
-import { Button } from "./ui/button";
 import { toast } from "sonner";
+import { Button } from "./shadcn-ui/button";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -28,9 +28,7 @@ class ErrorBoundary extends React.Component<
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // You can log the error to an error reporting service
     console.error("Uncaught error:", error, errorInfo);
-    toast.error("An unexpected error occurred", {
-      richColors: true,
-    });
+    toast.error("An unexpected error occurred");
   }
 
   render(): ReactNode {
@@ -45,7 +43,9 @@ class ErrorBoundary extends React.Component<
             <p className="mb-4">
               We're sorry for the inconvenience. Please try refreshing the page.
             </p>
-            <Button onClick={() => window.location.assign("/")}>Go Back</Button>
+            <Button onClick={() => window.location.reload()}>
+              Refresh Page
+            </Button>
           </div>
         </div>
       );

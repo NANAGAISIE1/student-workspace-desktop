@@ -5,10 +5,10 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
+
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@convex/*": ["./convex/_generated/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["vite.config.ts"]
