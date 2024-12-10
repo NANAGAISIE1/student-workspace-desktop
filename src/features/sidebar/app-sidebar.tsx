@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   AudioWaveform,
   Blocks,
@@ -11,19 +11,19 @@ import {
   Settings2,
   Sparkles,
   Trash2,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavFavorites } from "@/components/nav-favorites"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavWorkspaces } from "@/components/nav-workspaces"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavFavorites } from "@/features/sidebar/nav-favorites";
+import { NavMain } from "@/features/sidebar/nav-main";
+import { NavSecondary } from "@/features/sidebar/nav-secondary";
+import { NavWorkspaces } from "@/features/sidebar/nav-workspaces";
+import { TeamSwitcher } from "@/features/sidebar/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
@@ -254,11 +254,11 @@ const data = {
       ],
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="border-r-0" {...props}>
+    <Sidebar className="border-r-0 pt-4" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
         <NavMain items={data.navMain} />
@@ -270,5 +270,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

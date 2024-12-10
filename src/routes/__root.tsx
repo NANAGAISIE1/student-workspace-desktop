@@ -1,21 +1,33 @@
 import MainProviders from "@/components/providers";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import {
+  Link,
+  Outlet,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
-  component: () => (
-    <MainProviders>
-      <div className="p-2 flex gap-2" data-tauri-drag-region>
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
+  component: RootComponent,
+  notFoundComponent: () => {
+    return (
+      <div>
+        <p>This is the notFoundComponent configured on root route</p>
+        <Link to="/">Start Over</Link>
       </div>
-      <hr />
-      <Outlet />
-      <TanStackRouterDevtools />
-    </MainProviders>
-  ),
+    );
+  },
 });
+
+function RootComponent() {
+  return (
+    <>
+      <MainProviders>
+        <Outlet />
+      </MainProviders>
+      {/* <ReactQueryDevtools buttonPosition="top-right" />
+      <TanStackRouterDevtools position="bottom-right" /> */}
+    </>
+  );
+}
