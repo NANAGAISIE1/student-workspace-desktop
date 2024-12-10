@@ -3,9 +3,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import Breadcrumbs from "./breadcrumbs";
 import { NavActions } from "./nav-actions";
 
-type Props = {};
-
-const WorkareaHeader = (props: Props) => {
+const WorkareaHeader = () => {
   return (
     <header className="flex h-14 shrink-0 items-center gap-2">
       <div className="flex flex-1 items-center gap-2 px-3">

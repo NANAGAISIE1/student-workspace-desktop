@@ -5,9 +5,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 
-type Props = {};
-
-const Breadcrumbs = (props: Props) => {
+const Breadcrumbs = () => {
   return (
     <Breadcrumb>
       <BreadcrumbList>
